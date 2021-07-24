@@ -126,7 +126,7 @@ RF<-make_Weka_classifier("weka/classifiers/trees/RandomForest")
 
 m<-RF(event~., data=real_final)
 ```
-### **10 Fold cross-validation**
+### **10Fold cross-validation**
 ```
 e<-evaluate_Weka_classifier(m,numFolds=10,complexity=TRUE,class=TRUE)
 e
