@@ -1,4 +1,4 @@
-1.Package Used
+1.이용한 패키지
 
 library(dplyr)
 library(stringr)
