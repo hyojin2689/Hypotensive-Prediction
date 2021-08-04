@@ -1,20 +1,17 @@
-## **Hypotensive Prediction project : 저혈압 예측 모델 생성 프로젝트** 🏥
-#### ●Data Source : 순천향대학교 AI&빅데이터 센터의 혈압 관련 데이터 사용 (http://aibig.sch.ac.kr/main.do )
-#### ⠀
-### Package Used
-```
+1.Package Used
+
 library(dplyr)
 library(stringr)
 library(tidyverse)
 library(e1071)
 library(changepoint)
 library(RWeka)
-```
-### **Data Preprocessing**
-##### ●250Hz
-##### ●관찰기간 : 1분
-##### ●저혈압 기준 : 최소값이 50이하
-```
+
+2.데이터 
+●250Hz
+●관찰기간 : 1분
+●저혈압 기준 : 최소값이 50이하
+
 SRATE<-250
 MINUTES_AHEAD=1
 Data_set<-data.frame() #샘플 생성 후 저장할 공간 
@@ -22,7 +19,7 @@ Data_set<-data.frame() #샘플 생성 후 저장할 공간
 #moving average 사용자 정의 함수 생성
 ma<-function(x,n=5){stats::filter(x,rep(1/n,n),sides=2)}
 
-#전처리 (:불필요한 행과 문자 삭제 및 필요한 값만 추출) 후 객체화
+#(:불필요한 행과 문자 삭제 및 필요한 값만 추출) 후 객체화
 for (file in fls){
   df<- read.csv(file)
   df<-df[-c(1,2),] 
@@ -70,12 +67,11 @@ for(file in fls){
   data<- Data_set[[file]]
   final_data<-rbind(final_data,data)
 }
-```
-##### 
-### **Add Features**
-#### ●Statistical Features : 통계특징
-##### -mean, max, min, sd, skewness, rms, rss, IQR, kurtosis (평균, 최대, 최소, 표준편차, 왜도, rms, rss, 첨도)
-```
+
+#Feature추가
+●Statistical Features : 통계특징
+-mean, max, min, sd, skewness, rms, rss, IQR, kurtosis (평균, 최대, 최소, 표준편차, 왜도, rms, rss, 첨도)
+
 final_data2<-subset(final_data,select=-event)
 
 #rss/skewness함수 정의
@@ -95,10 +91,10 @@ final_data3<-final_data2%>%select(v_mean,v_max,v_min,v_sd,v_skewness,v_rms,v_rss
 final_data3<-cbind(final_data3,final_data$event)
 names(final_data3)[9]<-"event"
 View(final_data3)
-```
-#### ●ChangePoint Features : 변화분석
-##### -cpt.mean, cpt.var, cpt.meanvar (평균의 변화, 분산의 변화, 평균과 분산의 변화)
-```
+
+●ChangePoint Features : 변화분석
+-cpt.mean, cpt.var, cpt.meanvar (평균의 변화, 분산의 변화, 평균과 분산의 변화)
+
 chpt_df <- data.frame()
 for(i in 1:nrow(final_data2)){ #event 컬럼을 제거해 놓았던 final_data2 데이터 이용
   
@@ -118,18 +114,16 @@ View(chpt_df)
 #real_fianl : 변화분석 + 통계분석 합쳐서 데이터 만들기
 real_final<-cbind(final_data3,chpt_df)
 View(real_final)
-```
-### **Modeling**
-##### ●Random Forest model 사용
-```
-RF<-make_Weka_classifier("weka/classifiers/trees/RandomForest")
 
+3.모델링
+●Random Forest model 사용
+
+RF<-make_Weka_classifier("weka/classifiers/trees/RandomForest")
 m<-RF(event~., data=real_final)
-```
-### **10Fold cross-validation**
-```
+
+4.평가:10Fold cross-validation**
+
 e<-evaluate_Weka_classifier(m,numFolds=10,complexity=TRUE,class=TRUE)
 e
-```
 
 
