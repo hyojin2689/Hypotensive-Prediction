@@ -8,7 +8,7 @@ library(changepoint)
 library(RWeka)
 
 2.데이터 
-●250Hz
+●250 Hz
 ●관찰기간 : 1분
 ●저혈압 기준 : 최소값이 50이하
 
@@ -121,7 +121,7 @@ View(real_final)
 RF<-make_Weka_classifier("weka/classifiers/trees/RandomForest")
 m<-RF(event~., data=real_final)
 
-4.평가:10Fold cross-validation**
+4.평가:10 Fold cross-validation**
 
 e<-evaluate_Weka_classifier(m,numFolds=10,complexity=TRUE,class=TRUE)
 e
