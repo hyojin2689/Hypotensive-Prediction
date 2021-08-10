@@ -1,4 +1,4 @@
-1.이용한 패키지
+1.사용 
 
 library(dplyr)
 library(stringr)
