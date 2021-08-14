@@ -116,7 +116,7 @@ real_final<-cbind(final_data3,chpt_df)
 View(real_final)
 
 3.모델링
-●Random Forest model 사용
+●Random Forest 사용
 
 RF<-make_Weka_classifier("weka/classifiers/trees/RandomForest")
 m<-RF(event~., data=real_final)
@@ -125,5 +125,4 @@ m<-RF(event~., data=real_final)
 
 e<-evaluate_Weka_classifier(m,numFolds=10,complexity=TRUE,class=TRUE)
 e
-
 
